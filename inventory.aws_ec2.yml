@@ -1,11 +1,12 @@
-plugin: aws_ec2
+---
+plugin: amazon.aws.aws_ec2
 regions:
   - us-east-1
 filters:
   instance-state-name: running
-strict: False
-hostnames:
-  - dns-name
-  - ip-address
 compose:
-  ansible_host: public_ip_address
+  ansible_host: private_ip_address   # use private IP since control host is inside the VPC
+keyed_groups:
+  - key: tags.Role
+    prefix: tag_Role_
+strict: False
