@@ -7,6 +7,6 @@ filters:
 compose:
   ansible_host: private_ip_address   # use private IP since control host is inside the VPC
 keyed_groups:
-  - key: tags.Role
-    prefix: tag_Role_
+  - key: tags.ROLE
+    prefix: tag_ROLE_
 strict: False
