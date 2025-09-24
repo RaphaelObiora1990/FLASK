@@ -9,7 +9,7 @@
     s3_bucket: obiora101
     artifact: "{{ app_name }}.tar.gz"
   roles:
-    - role: flask_app
+    - role: flaskapp
       vars:
         deploy_dir: "{{ deploy_dir }}"
         venv_dir: "{{ venv_dir }}"
