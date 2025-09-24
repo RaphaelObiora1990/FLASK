@@ -1,6 +1,6 @@
 ---
 - name: Deploy Flask App
-  hosts: tags_ROLE_app server
+  hosts: role_app_server        # this matches the group shown in --graph
   become: yes
   vars:
     app_name: flaskapp
@@ -9,7 +9,7 @@
     s3_bucket: obiora101
     artifact: "{{ app_name }}.tar.gz"
   roles:
-    - role: flaskapp
+    - role: flask_app
       vars:
         deploy_dir: "{{ deploy_dir }}"
         venv_dir: "{{ venv_dir }}"
