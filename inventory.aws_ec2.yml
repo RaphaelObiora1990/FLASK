@@ -5,7 +5,7 @@ regions:
 filters:
   instance-state-name: running
 compose:
-  ansible_host: private_ip_address   # use private IP since control host is inside the VPC
+  ansible_host: private_ip_address
 keyed_groups:
   - key: tags.ROLE
     prefix: tag_ROLE_
