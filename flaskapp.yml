@@ -1,3 +1,4 @@
+
 ---
 - name: Deploy Flask App
   hosts: role_app_server        # this matches the group shown in --graph
