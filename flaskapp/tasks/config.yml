@@ -1,0 +1,71 @@
+- name: Create app directory
+  file:
+    path: /opt/flask-app
+    state: directory
+    mode: '0755'
+- name: Copy Flask app
+  copy:
+    src: app.py
+    dest: /opt/flask-app/app.py
+    mode: '0755'
+- name: Copy init_db.sql
+  copy:
+    src: init_db.sql
+    dest: /opt/flask-app/init_db.sql
+    mode: '0644'
+- name: Initialize SQLite database
+  ansible.builtin.shell: sqlite3 "/opt/flask-app/data.db" < "/opt/flask-app/init_db.sql"
+  args:
+    creates: "/opt/flask-app/data.db"
+- name: Copy templates
+  ansible.builtin.copy:
+    src: templates/
+    dest: /opt/flask-app/templates/
+    mode: '0755'
+- name: Copy requirements.txt
+  copy:
+    src: requirements.txt
+    dest: /opt/flask-app/requirements.txt
+    mode: '0644'
+- name: Create Python virtual environment
+  ansible.builtin.command: python3 -m venv /opt/flask-app/venv
+  args:
+    creates: /opt/flask-app/venv/bin/activate
+- name: Install Python dependencies
+  ansible.builtin.command: /opt/flask-app/venv/bin/pip install --upgrade pip
+- name: Install required packages
+  ansible.builtin.command: /opt/flask-app/venv/bin/pip install -r /opt/flask-app/requirements.txt
+- name: Create systemd service for Flask app
+  copy:
+    dest: /etc/systemd/system/flask-app.service
+    content: |
+      [Unit]
+      Description=Flask App
+      After=network.target
+      [Service]
+      User=ec2-user
+      WorkingDirectory=/opt/flask-app
+      ExecStart=/opt/flask-app/venv/bin/python app.py
+      Restart=always
+      [Install]
+      WantedBy=multi-user.target
+    mode: '0644'
+- name: Reload systemd daemon
+  ansible.builtin.systemd:
+    daemon_reload: yes
+- name: Enable and start Flask app
+  ansible.builtin.systemd:
+    name: flask-app
+    state: started
+    enabled: yes
+
+
+
+
+
+
+
+
+
+
+
